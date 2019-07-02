@@ -1,0 +1,162 @@
+<!--
+
+        This file is part of the Squashtest platform.
+        Copyright (C) 2018 - 2019 Henix
+
+        See the NOTICE file distributed with this work for additional
+        information regarding copyright ownership.
+
+        This is free software: you can redistribute it and/or modify
+        it under the terms of the GNU Lesser General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+
+        this software is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU Lesser General Public License for more details.
+
+        You should have received a copy of the GNU Lesser General Public License
+        along with this software.  If not, see <http://www.gnu.org/licenses />.
+
+-->
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.example</groupId>
+	<artifactId>SquashCucumberTest</artifactId>
+	<packaging>jar</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<!-- Properties definition -->
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Squash-TF-cucumber runner version used by the project -->
+		<ta.cucumber.runner.version>1.1.0-RELEASE</ta.cucumber.runner.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<!-- Configuration of the Squash TF framework used by the project -->
+			<plugin>
+				<groupId>org.squashtest.ta.galaxia</groupId>
+				<artifactId>squash-tf-gherkin-maven-plugin</artifactId>
+				<version>${ta.cucumber.runner.version}</version>
+				<configuration>
+					<featuresList>${ta.feature}</featuresList>
+					<squashRoot>tf_sample</squashRoot>
+					<!-- DryRunOptions for dryrun goal only -->
+					<additionnalDryRunChecks>true</additionnalDryRunChecks>
+
+					<!-- Define exporters -->
+					<gkexporters>
+						<exporter
+							implementation="org.squashtest.ta.commons.exporter.surefire.SurefireSuiteResultExporter">
+							<jenkinsAttachmentMode>${ta.jenkins.attachment.mode}</jenkinsAttachmentMode>
+						</exporter>
+
+						<exporter
+							implementation="org.squashtest.ta.gherkin.exporter.HtmlGherkinSuiteResultExporter" />
+					</gkexporters>
+
+					<!-- Define configurers -->
+					<gkconfigurers>
+						<configurer implementation="org.squashtest.ta.maven.TmCallBack">
+							<!-- <tmCallBack> -->
+							<endpointURL>${status.update.events.url}</endpointURL>
+							<executionExternalId>${squash.ta.external.id}</executionExternalId>
+							<jobName>${jobname}</jobName>
+							<hostName>${hostname}</hostName>
+							<endpointLoginConfFile>${squash.ta.conf.file}</endpointLoginConfFile>
+							<reportBaseUrl>${ta.tmcallback.reportbaseurl}</reportBaseUrl>
+							<jobExecutionId>${ta.tmcallback.jobexecutionid}</jobExecutionId>
+							<reportName>${ta.tmcallback.reportname}</reportName>
+							<!-- </tmCallBack> -->
+						</configurer>
+					</gkconfigurers>
+				</configuration>
+
+				<executions>
+					<execution>
+						<goals>
+							<!-- to execute feature files -->
+							<goal>run</goal>
+							<!-- to check feature files are runable (DryRun) -->
+							<goal>dryrun</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<!-- Squash TF maven plugin repository -->
+	<pluginRepositories>
+		<pluginRepository>
+			<id>org.squashtest.plugins.release</id>
+			<name>squashtest.org</name>
+			<url>http://repo.squashtest.org/maven2/releases</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<dependencies>
+	<!-- optional to override squash-ta-plugin-cucumber version used -->
+		<!--<dependency>
+			<groupId>org.squashtest.ta.plugin</groupId>
+			<artifactId>squash-ta-plugin-cucumber</artifactId>
+			<version>${ta.framework.version}</version>
+		</dependency>-->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-java</artifactId>
+			<version>4.2.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-junit</artifactId>
+			<version>4.2.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+
+		<!-- add here dependencies used by your java code implementing the features: 
+			database driver, selenium driver, .. -->
+		<!-- 
+		<dependency>
+			 <groupId>org.postgresql</groupId>
+			 <artifactId>postgresql</artifactId> 
+			 <version>42.2.1</version>
+		 </dependency> -->
+
+		<!-- 
+		<dependency>
+			 <groupId>org.seleniumhq.selenium</groupId> 
+			 <artifactId>selenium-chrome-driver</artifactId> 
+		   	 <version>3.9.1</version>
+		 </dependency> -->
+
+		<!-- 
+		<dependency>
+			 <groupId>com.smartbear.soapui</groupId>
+             <artifactId>soapui</artifactId> 
+			 <version>5.1.3</version>
+             <type>jar</type>
+        </dependency> -->
+
+	</dependencies>
+
+</project>
